@@ -1,0 +1,86 @@
+# 代码随想录算法训练营第一天 | 704. 二分查找 27. 移除元素
+
+### 704. 二分查找 
+
+
+```typescript
+// 左闭右闭 [start, end]
+function search1(nums: number[], target: number): number {
+    let start = 0;
+    let end = nums.length - 1
+    while(start <= end) {
+        // let mid = Math.floor((end + start) / 2)
+        const mid = start + ((end - start) >> 1); // >> 1 比较优雅的整除floor运算
+        if(nums[mid] === target) {
+            return mid
+        } else if(nums[mid] > target) {
+            end = mid - 1 // 因为mid不等于，就直接跳过
+        } else {
+            start = mid + 1 // 因为mid不等于，就直接跳过
+        }
+    }
+    return -1;
+};
+
+// 左闭右开 [start, end)
+
+function search2(nums: number[], target: number): number {
+    let start = 0;
+    let end = nums.length // 初始化的时候，因为是开区间，所以得用length不是length - 1
+    while(start < end) {
+        let mid = Math.floor((end + start) / 2) 
+        if(nums[mid] === target) {
+            return mid
+        } else if(nums[mid] > target) {
+            end = mid 
+        } else {
+            start = mid + 1
+        }
+    }
+    return -1;
+};
+
+// 因为这里用floor除，意味着相邻两个 a, a + 1 
+// 会落在a，所以当start = a, end = a + 1
+// 所以选择[a, b) 而不是（a, b]
+
+```
+
+个人觉得左闭右闭比较好理解
+
+
+### 27. 移除元素
+
+```typescript
+/*
+- 快慢指针的含义，快指针遇到val，快指针往前走1，慢指针留在原地。快指针持续前行直到遇到非val，把快赋值给慢，慢往前走1。
+- slow所在的位置前面所元素都是符合要求的所以直接返回slow即是符合要求的array的大小
+*/
+
+function removeElement1(nums: number[], val: number): number {
+    let slow = 0;
+    for(let fast = 0; fast < nums.length; fast++) {
+        if(nums[fast] !== val) {
+            nums[slow++] = nums[fast]
+        }
+    }
+    return slow 
+};
+
+// 双向指针
+
+/*
+一个从头，一个从尾，前面找等于val的，后面找到不等于val的，然后交换。持续找直到两个指针相遇。注意在交换前要确保一下前指针在后指针前面（因为用了while去找，所以在交换前要验证一下）
+*/
+function removeElement(nums: number[], val: number): number {
+    let slow = 0;
+    let fast = nums.length - 1;
+    while(slow <= fast) {
+        while(slow <= fast && nums[slow] !== val) slow++;
+        while(slow <= fast && nums[fast] === val) fast--;
+        if(slow < fast) nums[slow++] = nums[fast--]
+    }
+    return slow
+};
+
+```
