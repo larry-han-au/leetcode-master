@@ -1,0 +1,89 @@
+# 代码随想录算法训练营第十天
+
+## 232.用栈实现队列 
+
+```typescript
+class MyQueue {
+    private stackIn: number[]
+    private stackOut: number[]
+    
+    constructor() {
+        this.stackIn = []
+        this.stackOut = []
+    }
+
+    push(x: number): void {
+        this.stackIn.push(x)
+    }
+
+    pop(): number {
+        if(this.stackOut.length === 0) {
+            while(this.stackIn.length > 0) {
+                this.stackOut.push(this.stackIn.pop()!)
+            }
+        }
+        return this.stackOut.pop()!
+    }
+
+    peek(): number {
+        let temp: number = this.pop()
+        this.stackOut.push(temp)
+        return temp
+    }
+
+    empty(): boolean {
+        return this.stackIn.length ===  0 && this.stackOut.length === 0
+    }
+}
+```
+
+## 225. 用队列实现栈 
+
+
+```typescript
+class MyStack {
+    private queue: number[]
+    private tempQueue: number[]
+
+    constructor() {
+        this.queue = []
+        this.tempQueue = []    
+    }
+
+    push(x: number): void {
+        this.queue.push(x)
+    }
+
+    pop(): number {
+        for(let i = 0, length = this.queue.length - 1; i < length; i++) { // length 一直在变
+            this.tempQueue.push(this.queue.shift()!)
+        }
+        let res: number = this.queue.pop()!
+        let temp: number[] = this.queue
+        this.queue = this.tempQueue
+        this.tempQueue = temp
+        return res
+
+        // for (let i = 0, length = this.queue.length - 1; i < length; i++) {
+        //     this.tempQueue.push(this.queue.shift()!);
+        // }
+        // let res: number = this.queue.pop()!;
+        // let temp: number[] = this.queue;
+        // this.queue = this.tempQueue;
+        // this.tempQueue = temp;
+        // return res;
+    }
+
+    top(): number {
+        let res = this.pop()
+        this.push(res)
+        return res
+    }
+
+    empty(): boolean {
+        return this.queue.length === 0
+    }
+}
+
+```
+
